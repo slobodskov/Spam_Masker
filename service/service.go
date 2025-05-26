@@ -1,13 +1,14 @@
 package service
 
 import (
-	"fmt"
-	"os"
+	"github.com/slobodskov/spamMasker/presenter"
+	"github.com/slobodskov/spamMasker/producer"
 )
 
 type Service struct {
-	prod Producer
-	pres Presenter
+	prod     producer.Producer
+	pres     presenter.Presenter
+	fileText []string
 }
 
 /*func NewService(fileName string, _newFileName string) *Service {
