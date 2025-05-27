@@ -6,29 +6,13 @@ import (
 )
 
 type Service struct {
-	prod     producer.Producer
-	pres     presenter.Presenter
+	prod     producer.IProducer
+	pres     presenter.IPresenter
 	fileText []string
 }
 
-/*func NewService(fileName string, _newFileName string) *Service {
-	return &Service{inputFileName: fileName, outputFileName: _newFileName} //конструктор структуры
-}
-
-func getProdAndPres(prod Producer, pres Presenter) *Service { //прописать тест
-	return &Service{prod: prod, pres: pres} //конструктор принимающий Presenter/Producer
-}*/
-
-func inputConstructor() *Service { //конструктор для передачи аргументов в Presenter/Producer
-	args := os.Args[1:3]
-
-	if len(args) == 1 {
-		fmt.Println("Нет аргументов для чтения файла")
-	} else if args[2] == "" {
-		args[2] = args[1]
-	}
-
-	return NewService(args[1], args[2])
+func NewService(prod producer.IProducer, pres presenter.IPresenter) *Service {
+	return &Service{prod: prod, pres: pres} //конструктор структуры
 }
 
 func (s *Service) Run() error { //метод Run с использованием SpamMasker
