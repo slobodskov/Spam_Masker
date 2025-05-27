@@ -6,8 +6,12 @@ type Presenter struct {
 	outputFileName string
 }
 
-type iPresenter interface {
+type IPresenter interface {
 	Present([]string) error
+}
+
+func NewPresenter(outputFileName string) *Presenter {
+	return &Presenter{outputFileName: outputFileName}
 }
 
 func (pres Presenter) Present(data []string) error {
