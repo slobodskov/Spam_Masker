@@ -1,9 +1,7 @@
 package service
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -24,38 +22,12 @@ func (m *MockServ) Present(data []string) error {
 	return args.Error(0)
 }
 
-func TestService_Present(t *testing.T) {
-	serv := &Service{
-		outputFileName: "output.txt",
-	}
-
-	data := []string{"str 1", "str 2"}
-
-	err := serv.Present(data)
-	assert.NoError(t, err)
-
-	file, err := os.Open(serv.outputFileName)
-	assert.NoError(t, err)
-	defer os.Remove(serv.outputFileName)
-
-	scanner := bufio.NewScanner(file)
-	var text []string
-	for scanner.Scan() {
-		text = append(text, scanner.Text())
-	}
-	assert.NoError(t, scanner.Err())
-	assert.Equal(t, data, text)
-
-}
-
 func TestService_Run(t *testing.T) {
 	mockProd := new(MockServ)
 	mockPres := new(MockServ)
 	serv := &Service{
-		inputFileName:  "File1.txt",
-		outputFileName: "File2.txt",
-		prod:           mockProd,
-		pres:           mockPres,
+		prod: mockProd,
+		pres: mockPres,
 	}
 
 	inputData := []string{
@@ -107,33 +79,4 @@ func TestService_SpamMasker(t *testing.T) {
 			assert.Equal(t, test.expected, result, "Expected %v for input %s, but got %v", test.expected, test.input, result)
 		})
 	}
-}
-
-func TestNewService(t *testing.T) {
-
-	tests := []struct {
-		input1, input2  string
-		expectedService *Service
-	}{
-		{input1: "File", input2: "File1", expectedService: &Service{inputFileName: "File", outputFileName: "File1"}},
-	}
-
-	for _, test := range tests {
-		t.Run(fmt.Sprintf("NewService(%s, %s)", test.input1, test.input2), func(t *testing.T) {
-			result := NewService(test.input1, test.input2)
-			assert.Equal(t, test.expectedService, result, "Expected %v for input %s and %s, but got %v", test.expectedService, test.input1, test.input2, result)
-		})
-	}
-
-}
-
-func TestGetProdAndPres(t *testing.T) {
-	mockProd := new(MockServ)
-	mockPres := new(MockServ)
-
-	service := getProdAndPres(mockProd, mockPres)
-
-	assert.NotNil(t, service)
-	assert.Equal(t, mockProd, service.prod)
-	assert.Equal(t, mockPres, service.pres)
 }
