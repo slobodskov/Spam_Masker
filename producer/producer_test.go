@@ -8,19 +8,19 @@ import (
 )
 
 func TestService_Produce(t *testing.T) {
-	serv := &Producer{
+	prod := &Producer{
 		inputFileName: "test.txt",
 	}
 
-	file, err := os.Create(serv.inputFileName)
+	file, err := os.Create(prod.inputFileName)
 	assert.NoError(t, err)
-	defer os.Remove(serv.inputFileName)
+	defer os.Remove(prod.inputFileName)
 
 	_, err = file.WriteString("str 1\nstr 2\n")
 	assert.NoError(t, err)
 	file.Close()
 
-	result, err := serv.Produce()
+	result, err := prod.Produce()
 	assert.NoError(t, err)
 	assert.Equal(t, []string{"str 1", "str 2"}, result)
 }
