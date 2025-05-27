@@ -10,9 +10,13 @@ type Producer struct {
 	fileText      []string
 }
 
-type iProducer interface {
+type IProducer interface {
 	Produce() ([]string, error)
 }
+
+func NewProducer(inputFileName string) *Producer {
+	return &Producer{inputFileName: inputFileName}
+} //конструктор для producer
 
 func (prod Producer) Produce() ([]string, error) {
 	file, err := os.Open(prod.inputFileName)
