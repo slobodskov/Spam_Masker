@@ -9,18 +9,18 @@ import (
 )
 
 func TestService_Present(t *testing.T) {
-	serv := &Presenter{
-		outputFileName: "output.txt",
+	pres := &Presenter{
+		outputFileName: "outFile.txt",
 	}
 
 	data := []string{"str 1", "str 2"}
 
-	err := serv.Present(data)
+	err := pres.Present(data)
 	assert.NoError(t, err)
 
-	file, err := os.Open(serv.outputFileName)
+	file, err := os.Open(pres.outputFileName)
 	assert.NoError(t, err)
-	defer os.Remove(serv.outputFileName)
+	defer os.Remove(pres.outputFileName)
 
 	scanner := bufio.NewScanner(file)
 	var text []string
@@ -29,4 +29,5 @@ func TestService_Present(t *testing.T) {
 	}
 	assert.NoError(t, scanner.Err())
 	assert.Equal(t, data, text)
+
 }
