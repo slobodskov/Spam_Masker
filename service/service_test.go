@@ -75,8 +75,27 @@ func TestService_SpamMasker(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(fmt.Sprintf("SpamMasker(%s)", test.input), func(t *testing.T) {
-			result := serv.SpamMasker(test.input)
+			inputChan := make(chan string, 1) //для избежания блокировки нужен буфер
+			outputChan := make(chan string)
+
+			inputChan <- test.input
+			serv.SpamMasker(inputChan, outputChan)
+
+			defer close(inputChan)
+			defer close(outputChan)
+			result := <-outputChan
 			assert.Equal(t, test.expected, result, "Expected %v for input %s, but got %v", test.expected, test.input, result)
 		})
 	}
+}
+
+func TestNewService(t *testing.T) {
+	mockProd := new(MockServ)
+	mockPres := new(MockServ)
+
+	service := NewService(mockProd, mockPres)
+
+	assert.NotNil(t, service)
+	assert.Equal(t, mockProd, service.prod)
+	assert.Equal(t, mockPres, service.pres)
 }
