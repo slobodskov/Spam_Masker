@@ -1,5 +1,3 @@
-package producer
-
 import (
 	"os"
 	"testing"
